@@ -1,0 +1,18 @@
+.deck {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping to the next row */
+    justify-content: space-between; /* Adjusts spacing between cards */
+    gap: 10px; /* Adds spacing between cards */
+}
+
+.card {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100px;
+    height: 150px;
+    margin: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
