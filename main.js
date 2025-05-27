@@ -1,84 +1,22 @@
-const EFFECT_EMPTY = "X";
-const EFFECT_HEAL = "Heal";
-const EFFECT_INCREASE_ATTACK = "Increase Attack";
-const EFFECTS = [EFFECT_EMPTY, EFFECT_HEAL, EFFECT_INCREASE_ATTACK];
-
 var deckFighter1;
 var deckFighter2;
-
-var deck = [
-    {
-        ATT: 4,
-        LIFE: 4
-    },
-    {
-        ATT: 3,
-        LIFE: 3
-    },
-    {
-        ATT: 1,
-        LIFE: 1
-    },
-    {
-        ATT: 0,
-        LIFE: 1
-    },
-    {
-        ATT: 2,
-        LIFE: 2
-    }
-];
-
-var deck2 = [
-    {
-        ATT: 4,
-        LIFE: 4
-    },
-    {
-        ATT: 0,
-        LIFE: 1
-    },
-    {
-        ATT: 2,
-        LIFE: 2
-    },
-    {
-        ATT: 3,
-        LIFE: 3
-    },
-    {
-        ATT: 1,
-        LIFE: 1
-    }
-];
-
-/*let effects = [
-    new Effect("X", 0, function (card) {
-        // No effect    
-    }),
-    new Effect(HEAL, 1, function (card) {
-        card.LIFE += 1; // Heal 1 life 
-    }),
-];*/
-let effects = new Map();
-effects.set(EFFECT_EMPTY, { name: EFFECT_EMPTY, power: 0, effect: function (card) { /* No effect */ } });
-effects.set(EFFECT_HEAL, { name: EFFECT_HEAL, power: 1, effect: function (card) { card.LIFE += 1; } });
-effects.set(EFFECT_INCREASE_ATTACK, { name: EFFECT_INCREASE_ATTACK, power: 1, effect: function (card) { card.ATT += 1; } });
 
 main();
 
 function main() {
 
-    //deckFighter1 = shuffleDeck(deck.slice());
+    //deckFighter1 = shuffleDeck(deck1.slice());
     //deckFighter2 = shuffleDeck(deck2.slice());
-    //deckFighter1 = deck.slice();
-    //deckFighter2 = deck2.slice();
-    deckFighter1 = generateRandomDeck().slice();
-    deckFighter2 = generateRandomDeck().slice();
+    deckFighter1 = deck1.slice();
+    deckFighter2 = deck2.slice();
+    //deckFighter1 = generateRandomDeck().slice();
+    //deckFighter2 = generateRandomDeck().slice();
 
     let html = "";
+    html += "<div>Power: " + getPowerOfDeck(deckFighter1) + "</div>";
     html += displayDeck(deckFighter1);
     html += "<div class='vs'>VS</div>";
+    html += "<div>Power: " + getPowerOfDeck(deckFighter2) + "</div>";
     html += displayDeck(deckFighter2);
     document.getElementById("board").innerHTML = html;
 
