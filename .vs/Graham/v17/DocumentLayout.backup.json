@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\MaVie\\Prog\\repo\\Graham\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\MaVie\\Prog\\repo\\Graham\\preambule.js||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:preambule.js||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\MaVie\\Prog\\repo\\Graham\\deck2.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:deck2.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\MaVie\\Prog\\repo\\Graham\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\MaVie\\Prog\\repo\\Graham\\preambule.js||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:preambule.js||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -37,8 +37,12 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "preambule.js",
               "DocumentMoniker": "C:\\MaVie\\Prog\\repo\\Graham\\preambule.js",
               "RelativeDocumentMoniker": "preambule.js",
@@ -51,7 +55,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "deck2.js",
               "DocumentMoniker": "C:\\MaVie\\Prog\\repo\\Graham\\deck2.js",
               "RelativeDocumentMoniker": "deck2.js",
@@ -64,7 +68,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "deck1.js",
               "DocumentMoniker": "C:\\MaVie\\Prog\\repo\\Graham\\deck1.js",
               "RelativeDocumentMoniker": "deck1.js",
@@ -72,12 +76,11 @@
               "RelativeToolTip": "deck1.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-27T20:29:13.229Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T20:29:13.229Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "index.html",
               "DocumentMoniker": "C:\\MaVie\\Prog\\repo\\Graham\\index.html",
               "RelativeDocumentMoniker": "index.html",
@@ -85,12 +88,11 @@
               "RelativeToolTip": "index.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-05-27T20:28:32.827Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T20:28:32.827Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "main.js",
               "DocumentMoniker": "C:\\MaVie\\Prog\\repo\\Graham\\main.js",
               "RelativeDocumentMoniker": "main.js",
@@ -98,8 +100,7 @@
               "RelativeToolTip": "main.js",
               "ViewState": "AgIAAIgAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-05-27T20:21:56.806Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T20:21:56.806Z"
             }
           ]
         }
