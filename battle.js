@@ -1,3 +1,5 @@
+"use strict";
+
 class Battle {
     constructor(deck1, deck2) {
         this.battlefield = [];
