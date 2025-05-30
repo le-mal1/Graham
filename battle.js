@@ -14,15 +14,12 @@ class Battle {
 
     fight() {
 
-        let tmpLeader;
-
         for (let i = 0; i < 10; i++) {
             this.turn++;
             console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
 
             for (let b = 0; b < this.battlefield.length; b++) {
-                tmpLeader = this.battlefield[b][this.indexes[b]];
-                if (tmpLeader == undefined || tmpLeader.life <= 0) {
+                if (this.getLeaderCard(b) == undefined || this.getLeaderCard(b).life <= 0) {
                     if (this.tmpDecks[b].getSize() == 0) {
                         this.losers[b] = true;
                     } else {
@@ -57,9 +54,9 @@ class Battle {
 
             console.log("FIGHT !!!")
             //apply damage
-            if (this.battlefield[0][this.indexes[0]].life > 0 && this.battlefield[1][this.indexes[1]].life > 0) {
-                this.battlefield[0][this.indexes[0]].life -= this.battlefield[1][this.indexes[1]].attack;
-                this.battlefield[1][this.indexes[1]].life -= this.battlefield[0][this.indexes[0]].attack;
+            if (this.getLeaderCard(0).life > 0 && this.getLeaderCard(1).life > 0) {
+                this.getLeaderCard(0).life -= this.getLeaderCard(1).attack;
+                this.getLeaderCard(1).life -= this.getLeaderCard(0).attack;
             }
 
             //age cards
@@ -116,5 +113,9 @@ class Battle {
             return true;
         }
 
+    }
+
+    getLeaderCard(playerId) {
+        return this.battlefield[playerId][this.indexes[playerId]];
     }
 }
