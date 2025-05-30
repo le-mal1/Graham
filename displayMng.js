@@ -35,7 +35,7 @@ class DisplayMng {
         html += "----";
         html += "<div class='power'>Power: " + card.getPower() + "</div>";
         html += "<div class='age'>Age: " + (card.age ? card.age : 0) + "</div>";
-        html += "<div class='energy'>Energy: " + (card.energy ? card.energy : 0) + "</div>";
+        //html += "<div class='energy'>Energy: " + (card.energy ? card.energy : 0) + "</div>";
         html += "</div>";
         return html;
     }
