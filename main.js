@@ -32,7 +32,7 @@ function main() {
     html += "<h2>Decks Library</h2>";
     html += "Random (<a href=\"?deck1=RANDOM&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=RANDOM\">2</a>) ";
     deckLibrary.forEach((deck, name) => {
-        html += name + "(<a href=\"?deck1=" + name + "&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=" + name + "\">2</a>) ";
+        html += name + " " + deck.getSize() + " (<a href=\"?deck1=" + name + "&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=" + name + "\">2</a>) ";
     });
     document.getElementById("decksMenu").innerHTML = html;
 
