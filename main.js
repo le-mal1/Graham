@@ -8,13 +8,37 @@ main();
 
 function main() {
 
-    //deckFighter1 = deck1.copy();
-    //deckFighter2 = deck1.copy();
-    deckFighter1 = generateRandomDeck().copy();
-    deckFighter2 = generateRandomDeck().copy();
+    let nameDeck1 = "RANDOM";
+    let nameDeck2 = "RANDOM";
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('deck1')) nameDeck1 = urlParams.get('deck1');
+    if (urlParams.has('deck2')) nameDeck2 = urlParams.get('deck2');
+    
+    //console.log("deck1: " + nameDeck1 + ", deck2: " + nameDeck2);
+
+    if (deckLibrary.has(nameDeck1)) {
+        deckFighter1 = deckLibrary.get(nameDeck1).copy();
+    } else {
+        deckFighter1 = generateRandomDeck().copy();
+    }
+    if (deckLibrary.has(nameDeck2)) {
+        deckFighter2 = deckLibrary.get(nameDeck2).copy();
+    } else {
+        deckFighter2 = generateRandomDeck().copy();
+    }
 
     let html = "";
+    html += "<h2>Decks Library</h2>";
+    html += "Random (<a href=\"?deck1=RANDOM&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=RANDOM\">2</a>) ";
+    deckLibrary.forEach((deck, name) => {
+        html += name + "(<a href=\"?deck1=" + name + "&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=" + name + "\">2</a>) ";
+    });
+    document.getElementById("decksMenu").innerHTML = html;
+
+
+
+    html = "";
     html += DisplayMng.displayBattlefield(deckFighter1, deckFighter2);
     document.getElementById("board").innerHTML = html;
 
@@ -25,7 +49,7 @@ function main() {
 
 function generateRandomDeck() {
     let randomDeck = new Deck();
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
         randomDeck.addCard(new Card(
 
             Math.floor(Math.random() * 10), // Random attack between 0 and 9

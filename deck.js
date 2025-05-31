@@ -8,6 +8,7 @@ class Deck {
 
     addCard(card) {
         this.cards.push(card);
+        return this; // Return 'this' to allow method chaining
     }
 
     getCards() {

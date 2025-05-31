@@ -1,28 +1,6 @@
-var deck2 = [
-    {
-        ATT: 1,
-        LIFE: 1,
-        EFF: EFFECT_EMPTY
-    },
-    {
-        ATT: 2,
-        LIFE: 1,
-        EFF: EFFECT_EMPTY
-
-    },
-    {
-        ATT: 9,
-        LIFE: 1,
-        EFF: EFFECT_EMPTY
-    },
-    {
-        ATT: 3,
-        LIFE: 5,
-        EFF: EFFECT_HEAL
-    },
-    {
-        ATT: 1,
-        LIFE: 2,
-        EFF: EFFECT_INCREASE_ATTACK
-    }
-];
+var deck2 = new Deck();
+deckLibrary.set("deck2", deck2);
+deck2.addCard(new Card(3, 5, [EFFECT_INCREASE_ATTACK], [EFFECT_EMPTY]))
+    .addCard(new Card(2, 1, [EFFECT_HEAL], [EFFECT_EMPTY]))
+    .addCard(new Card(2, 1, [EFFECT_HEAL], [EFFECT_EMPTY]))
+    .addCard(new Card(2, 1, [EFFECT_HEAL], [EFFECT_EMPTY]));

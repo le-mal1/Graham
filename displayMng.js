@@ -3,7 +3,9 @@
 class DisplayMng {
 
     static displayBattlefield(deck1, deck2) {
-        let html = "<div class='battlefield'>";
+        let html = "";
+        html += "<h2>Battlefield</h2>";
+        html += "<div class='battlefield'>";
         html += "<div class='deck1'>";
         html += "<div class='power'>Power: " + deck1.getPower() + "</div>";
         html += this.displayDeck(deck1);
