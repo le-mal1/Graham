@@ -21,14 +21,24 @@ class Battle {
             if (!isTest)
                 console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
 
+            // Update leaders
             for (let b = 0; b < this.battlefield.length; b++) {
-                if (this.getLeaderCard(b) == undefined || this.getLeaderCard(b).life <= 0) {
-                    if (this.tmpDecks[b].getSize() == 0) {
-                        this.losers[b] = true;
-                    } else {
-                        this.battlefield[b].push(new IngameCard(this.tmpDecks[b].getTopCard()));
-                        this.tmpDecks[b].removeTopCard();
-                        this.indexes[b]++;
+                if (this.leaders[b] == undefined || this.leaders[b].life <= 0) {
+                    this.indexes[b] = -1; // Reset index if leader is dead
+                    for (let c = 0; c < this.battlefield[b].length; c++) {
+                        if (this.battlefield[b][c].life > 0) {
+                            this.indexes[b] = c;
+                            break;
+                        }
+                    }
+                    if (this.indexes[b] == -1) {
+                        if (this.tmpDecks[b].getSize() > 0) {
+                            this.battlefield[b].push(new IngameCard(this.tmpDecks[b].getTopCard()));
+                            this.tmpDecks[b].removeTopCard();
+                            this.indexes[b] = this.battlefield[b].length - 1;
+                        } else {
+                            this.losers[b] = true;
+                        }
                     }
                 }
             }
@@ -59,9 +69,9 @@ class Battle {
             if (!isTest)
                 console.log("FIGHT !!!")
             //apply damage
-            if (this.getLeaderCard(0).life > 0 && this.getLeaderCard(1).life > 0) {
-                this.getLeaderCard(0).life -= this.getLeaderCard(1).attack;
-                this.getLeaderCard(1).life -= this.getLeaderCard(0).attack;
+            if (this.leaders[0].life > 0 && this.leaders[1].life > 0) {
+                this.leaders[0].life -= this.leaders[1].attack;
+                this.leaders[1].life -= this.leaders[0].attack;
             }
 
             //age cards
@@ -87,16 +97,23 @@ class Battle {
 
     displayBfConsole() {
         let cs = "";
-        for (let i = 0; i < this.battlefield.length; i++) {
-            this.battlefield[i].forEach((card) => {
-
+        for (let b = 0; b < this.battlefield.length; b++) {
+            this.battlefield[b].forEach((card, idx) => {
+                if (idx == this.indexes[b])
+                    cs += "[";
                 if (card.life <= 0) {
-                    cs += " - X";
+                    cs += "X";
                 } else {
-                    cs += " - att: " + card.attack + " " + "life: " + card.life
-                        + " start: " + card.effect_start + " loop: " + card.effect_loop
-                        + " age: " + card.age + " energy: " + card.energy;
+                    cs += "att: " + card.attack + " ";
+                    cs += "life: " + card.life + " ";
+                    cs += card.effect_start[0] != EFFECT_EMPTY ? "start: " + card.effect_start + " " : "";
+                    cs += card.effect_loop[0] != EFFECT_EMPTY ? "loop: " + card.effect_loop + " " : "";
+                    cs += "age: " + card.age + " ";
+                    //cs += "energy: " + card.energy + " ";
                 }
+                if (idx == this.indexes[b])
+                    cs += "]";
+                cs += " | ";
             }
             );
             cs += "\n";
@@ -127,7 +144,19 @@ class Battle {
 
     }
 
-    getLeaderCard(playerId) {
-        return this.battlefield[playerId][this.indexes[playerId]];
+    get leaders() {
+        return [this.battlefield[0][this.indexes[0]], this.battlefield[1][this.indexes[1]]];
     }
+
+    /*selectNextLeader(playerId) {
+        if (this.indexes[playerId] < this.battlefield[playerId].length - 1) {
+            this.indexes[playerId]++;
+        } else {
+            console.log("No more leaders for player " + playerId);
+        }
+    })*/
+
+    /*getLeaderCard(playerId) {
+        return this.battlefield[playerId][this.indexes[playerId]];
+    }*/
 }
