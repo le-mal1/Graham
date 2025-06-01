@@ -12,7 +12,15 @@ effects.set(EFFECT_EMPTY, { name: EFFECT_EMPTY, power: 0, effect: function (card
 effects.set(EFFECT_HEAL, { name: EFFECT_HEAL, power: 1, effect: function (card, battle, idPlayer) { card.life += 1; } });
 effects.set(EFFECT_INCREASE_ATTACK, { name: EFFECT_INCREASE_ATTACK, power: 1, effect: function (card, battle, idPlayer) { card.attack += 1; } });
 effects.set(EFFECT_INCREASE_ENERGY, { name: EFFECT_INCREASE_ENERGY, power: 1, effect: function (card, battle, idPlayer) { battle.energies[idPlayer] += 1; }});
-effects.set(EFFECT_DESTROY, { name: EFFECT_DESTROY, power: 7, effect: function (card, battle, idPlayer) { battle.getLeaderCard(1 - idPlayer).life = 0; }});
+effects.set(EFFECT_DESTROY, {
+    name: EFFECT_DESTROY, power: 4, effect: function (card, battle, idPlayer) {
+        if (battle.energies[idPlayer] > 0) {
+            battle.getLeaderCard(1 - idPlayer).life = 0;
+            battle.energies[idPlayer]--;
+        }
+            
+    }
+});
 
 var deckLibrary = new Map();
 let tmpDeck;

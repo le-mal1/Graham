@@ -16,9 +16,10 @@ class Battle {
 
     fight() {
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 20; i++) {
             this.turn++;
-            console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
+            if (!isTest)
+                console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
 
             for (let b = 0; b < this.battlefield.length; b++) {
                 if (this.getLeaderCard(b) == undefined || this.getLeaderCard(b).life <= 0) {
@@ -52,9 +53,11 @@ class Battle {
                 });
             }
 
-            console.log(this.displayBfConsole());
+            if (!isTest)
+                console.log(this.displayBfConsole());
 
-            console.log("FIGHT !!!")
+            if (!isTest)
+                console.log("FIGHT !!!")
             //apply damage
             if (this.getLeaderCard(0).life > 0 && this.getLeaderCard(1).life > 0) {
                 this.getLeaderCard(0).life -= this.getLeaderCard(1).attack;
@@ -68,7 +71,8 @@ class Battle {
                 });
             }
 
-            console.log(this.displayBfConsole(this.battlefield));
+            if (!isTest)
+                console.log(this.displayBfConsole());
 
             if (i >= 99) {
                 console.log("Max turns reached. Ending fight.");
@@ -105,12 +109,18 @@ class Battle {
         let loser2 = this.losers[1];
 
         if (loser1 == true && loser2 == true) {
+            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+            console.log(this.decks[0].getPower() == this.decks[1].getPower());
             console.log("It's a draw!");
             return true;
         } else if (loser1 == true) {
+            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+            console.log(this.decks[0].getPower() < this.decks[1].getPower());
             console.log("Deck 1 is empty. Player 2 wins!");
             return true;
         } else if (loser2 == true) {
+            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+            console.log(this.decks[0].getPower() > this.decks[1].getPower());
             console.log("Deck 2 is empty. Player 1 wins!");
             return true;
         }

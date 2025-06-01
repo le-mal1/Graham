@@ -3,6 +3,7 @@
 var deckFighter1;
 var deckFighter2;
 var battle;
+var isTest = false;
 
 main();
 
@@ -14,7 +15,7 @@ function main() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('deck1')) nameDeck1 = urlParams.get('deck1');
     if (urlParams.has('deck2')) nameDeck2 = urlParams.get('deck2');
-    
+
     //console.log("deck1: " + nameDeck1 + ", deck2: " + nameDeck2);
 
     if (deckLibrary.has(nameDeck1)) {
@@ -36,14 +37,14 @@ function main() {
     });
     document.getElementById("decksMenu").innerHTML = html;
 
-
-
     html = "";
     html += DisplayMng.displayBattlefield(deckFighter1, deckFighter2);
     document.getElementById("board").innerHTML = html;
 
     battle = new Battle(deckFighter1, deckFighter2);
     battle.fight();
+
+    //test100Decks();
 }
 
 
@@ -60,5 +61,17 @@ function generateRandomDeck() {
 
     }
     return randomDeck;
+}
+
+function test100Decks() {
+    isTest = true;
+    for (let i = 0; i < 100; i++) {
+        deckFighter1 = generateRandomDeck().copy();
+        deckFighter2 = generateRandomDeck().copy();
+
+        battle = new Battle(deckFighter1, deckFighter2);
+        battle.fight();
+    }
+    isTest = false;
 }
 
