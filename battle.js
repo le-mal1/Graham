@@ -56,6 +56,13 @@ class Battle {
                         });
                     }
 
+                });
+            }
+
+            for (let b = 0; b < this.battlefield.length; b++) {
+                this.battlefield[b].forEach((card) => {
+                    if (card.life <= 0) return; // Skip dead cards
+
                     card.effect_loop.forEach(effect => {
                         effects.get(effect).effect(card, this, b);
                     });
