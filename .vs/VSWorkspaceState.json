@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\decks"
   ],
-  "SelectedNode": "\\preambule.js",
+  "SelectedNode": "\\displayMng.js",
   "PreviewInSolutionExplorer": false
 }

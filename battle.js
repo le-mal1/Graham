@@ -15,90 +15,94 @@ class Battle {
 
 
     fight() {
-
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < MAX_TURNS; i++) {
             this.turn++;
-            if (!isTest)
-                console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
-
-            // Update leaders
-            for (let b = 0; b < this.battlefield.length; b++) {
-                if (this.leaders[b] == undefined || this.leaders[b].life <= 0) {
-                    this.indexes[b] = -1; // Reset index if leader is dead
-                    for (let c = 0; c < this.battlefield[b].length; c++) {
-                        if (this.battlefield[b][c].life > 0) {
-                            this.indexes[b] = c;
-                            break;
-                        }
-                    }
-                    if (this.indexes[b] == -1) {
-                        if (this.tmpDecks[b].getSize() > 0) {
-                            this.battlefield[b].push(new IngameCard(this.tmpDecks[b].getTopCard()));
-                            this.tmpDecks[b].removeTopCard();
-                            this.indexes[b] = this.battlefield[b].length - 1;
-                        } else {
-                            this.losers[b] = true;
-                        }
-                    }
-                }
-            }
-
-            if (this.checkVictory()) break;
-
-            //Effects
-            for (let b = 0; b < this.battlefield.length; b++) {
-                this.battlefield[b].forEach((card) => {
-                    if (card.life <= 0) return; // Skip dead cards
-
-                    if (card.age <= 0) {
-                        card.effect_start.forEach(effect => {
-                            effects.get(effect).effect(card, this, b);
-                        });
-                    }
-
-                });
-            }
-
-            for (let b = 0; b < this.battlefield.length; b++) {
-                this.battlefield[b].forEach((card) => {
-                    if (card.life <= 0) return; // Skip dead cards
-
-                    card.effect_loop.forEach(effect => {
-                        effects.get(effect).effect(card, this, b);
-                    });
-
-                });
-            }
-
-            if (!isTest)
-                console.log(this.displayBfConsole());
-
-            if (!isTest)
-                console.log("FIGHT !!!")
-            //apply damage
-            if (this.leaders[0].life > 0 && this.leaders[1].life > 0) {
-                this.leaders[0].life -= this.leaders[1].attack;
-                this.leaders[1].life -= this.leaders[0].attack;
-            }
-
-            //age cards
-            for (let j = 0; j < this.battlefield.length; j++) {
-                this.battlefield[j].forEach((card) => {
-                    card.age++;
-                });
-            }
-
-            if (!isTest)
-                console.log(this.displayBfConsole());
-
-            if (i >= 99) {
+            this.fightOneTurn();
+            if (i >= MAX_TURNS - 1) {
                 console.log("Max turns reached. Ending fight.");
                 this.losers[0] = true;
                 this.losers[1] = true;
-                checkVictory();
-                break;
+            }
+            if (this.checkVictory(true)) break; // Exit if victory condition is met
+        }
+    }
+
+    fightOneTurn() {
+
+        if (!isTest)
+            console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
+
+        // Update leaders
+        for (let b = 0; b < this.battlefield.length; b++) {
+            if (this.leaders[b] == undefined || this.leaders[b].life <= 0) {
+                this.indexes[b] = -1; // Reset index if leader is dead
+                for (let c = 0; c < this.battlefield[b].length; c++) {
+                    if (this.battlefield[b][c].life > 0) {
+                        this.indexes[b] = c;
+                        break;
+                    }
+                }
+                if (this.indexes[b] == -1) {
+                    if (this.tmpDecks[b].getSize() > 0) {
+                        this.battlefield[b].push(new IngameCard(this.tmpDecks[b].getTopCard()));
+                        this.tmpDecks[b].removeTopCard();
+                        this.indexes[b] = this.battlefield[b].length - 1;
+                    } else {
+                        this.losers[b] = true;
+                    }
+                }
             }
         }
+
+        if (this.checkVictory()) return;// break;
+
+        //Effects start & loop
+        for (let b = 0; b < this.battlefield.length; b++) {
+            this.battlefield[b].forEach((card) => {
+                if (card.life <= 0) return; // Skip dead cards
+
+                if (card.age <= 0) {
+                    card.effect_start.forEach(effect => {
+                        effects.get(effect).effect(card, this, b);
+                    });
+                }
+
+            });
+        }
+
+        for (let b = 0; b < this.battlefield.length; b++) {
+            this.battlefield[b].forEach((card) => {
+                if (card.life <= 0) return; // Skip dead cards
+
+                card.effect_loop.forEach(effect => {
+                    effects.get(effect).effect(card, this, b);
+                });
+
+            });
+        }
+
+        if (!isTest)
+            console.log(this.displayBfConsole());
+
+        if (!isTest)
+            console.log("FIGHT !!!")
+
+        //apply damage
+        if (this.leaders[0].life > 0 && this.leaders[1].life > 0) {
+            this.leaders[0].life -= this.leaders[1].attack;
+            this.leaders[1].life -= this.leaders[0].attack;
+        }
+
+        //age cards
+        for (let j = 0; j < this.battlefield.length; j++) {
+            this.battlefield[j].forEach((card) => {
+                card.age++;
+            });
+        }
+
+        if (!isTest)
+            console.log(this.displayBfConsole());
+
 
     }
 
@@ -128,24 +132,30 @@ class Battle {
         return cs;
     }
 
-    checkVictory() {
+    checkVictory(displayMsg = false) {
         let loser1 = this.losers[0];
         let loser2 = this.losers[1];
 
         if (loser1 == true && loser2 == true) {
-            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
-            console.log(this.decks[0].getPower() == this.decks[1].getPower());
-            console.log("It's a draw!");
+            if (displayMsg) {
+                console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+                console.log(this.decks[0].getPower() == this.decks[1].getPower());
+                console.log("It's a draw!");
+            }
             return true;
         } else if (loser1 == true) {
-            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
-            console.log(this.decks[0].getPower() < this.decks[1].getPower());
-            console.log("Deck 1 is empty. Player 2 wins!");
+            if (displayMsg) {
+                console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+                console.log(this.decks[0].getPower() < this.decks[1].getPower());
+                console.log("Deck 1 is empty. Player 2 wins!");
+            }
             return true;
         } else if (loser2 == true) {
-            console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
-            console.log(this.decks[0].getPower() > this.decks[1].getPower());
-            console.log("Deck 2 is empty. Player 1 wins!");
+            if (displayMsg) {
+                console.log(this.decks[0].getPower() + " " + this.decks[1].getPower());
+                console.log(this.decks[0].getPower() > this.decks[1].getPower());
+                console.log("Deck 2 is empty. Player 1 wins!");
+            }
             return true;
         }
 
@@ -154,16 +164,4 @@ class Battle {
     get leaders() {
         return [this.battlefield[0][this.indexes[0]], this.battlefield[1][this.indexes[1]]];
     }
-
-    /*selectNextLeader(playerId) {
-        if (this.indexes[playerId] < this.battlefield[playerId].length - 1) {
-            this.indexes[playerId]++;
-        } else {
-            console.log("No more leaders for player " + playerId);
-        }
-    })*/
-
-    /*getLeaderCard(playerId) {
-        return this.battlefield[playerId][this.indexes[playerId]];
-    }*/
 }

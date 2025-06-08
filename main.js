@@ -1,5 +1,7 @@
 "use strict";
 
+const MAX_TURNS = 20;
+
 var deckFighter1;
 var deckFighter2;
 var battle;
@@ -44,13 +46,14 @@ function main() {
     battle = new Battle(deckFighter1, deckFighter2);
     battle.fight();
 
+
     //test100Decks();
 }
 
 
 function generateRandomDeck() {
     let randomDeck = new Deck();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 5; i++) {
         randomDeck.addCard(new Card(
 
             Math.floor(Math.random() * 10), // Random attack between 0 and 9
