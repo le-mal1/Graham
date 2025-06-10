@@ -27,18 +27,18 @@ effects.set(EFFECT_DESTROY, {
 effects.set(EFFECT_HIT_LEADER, { name: EFFECT_HIT_LEADER, power: 1, effect: function (card, battle, idPlayer) { battle.leaders[1-idPlayer].life -= 1; } });
 effects.set(EFFECT_CALL_LEADER, {
     name: EFFECT_CALL_LEADER, power: 1, effect: function (card, battle, idPlayer) {
-        if (battle.tmpDecks[idPlayer].getSize() > 0) {
-            battle.battlefield[idPlayer].push(new IngameCard(battle.tmpDecks[idPlayer].getTopCard()));
-            battle.tmpDecks[idPlayer].removeTopCard();
-            battle.indexes[idPlayer]++;
+        if (battle.battleDecks[idPlayer].getSize() > 0) {
+            battle.battlefield[idPlayer].push(new IngameCard(battle.battleDecks[idPlayer].getTopCard()));
+            battle.battleDecks[idPlayer].removeTopCard();
+            battle.leaderIndexes[idPlayer]++;
         }
     }
 });
 effects.set(EFFECT_CALL_SUPPORT, {
     name: EFFECT_CALL_SUPPORT, power: 1, effect: function (card, battle, idPlayer) {
-        if (battle.tmpDecks[idPlayer].getSize() > 0) {
-            battle.battlefield[idPlayer].push(new IngameCard(battle.tmpDecks[idPlayer].getTopCard()));
-            battle.tmpDecks[idPlayer].removeTopCard();
+        if (battle.battleDecks[idPlayer].getSize() > 0) {
+            battle.battlefield[idPlayer].push(new IngameCard(battle.battleDecks[idPlayer].getTopCard()));
+            battle.battleDecks[idPlayer].removeTopCard();
             //battle.indexes[idPlayer]++;
         }
     }

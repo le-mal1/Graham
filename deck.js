@@ -34,7 +34,7 @@ class Deck {
     copy() {
         let newDeck = new Deck();
         this.cards.forEach(card => {
-            newDeck.addCard(new Card(card.attack, card.life, card.effect_start, card.effect_loop));
+            newDeck.addCard(card.copy());
         });
         return newDeck;
     }

@@ -37,14 +37,27 @@ function main() {
     deckLibrary.forEach((deck, name) => {
         html += name + " " + deck.getSize() + " (<a href=\"?deck1=" + name + "&deck2=" + nameDeck2 + "\">1</a>-<a href=\"?deck1=" + nameDeck1 + "&deck2=" + name + "\">2</a>) ";
     });
-    document.getElementById("decksMenu").innerHTML = html;
+    document.getElementById("decksLibrary").innerHTML = html;
 
     html = "";
-    html += DisplayMng.displayBattlefield(deckFighter1, deckFighter2);
-    document.getElementById("board").innerHTML = html;
+    html += DisplayMng.displayDecks(deckFighter1, deckFighter2);
+    document.getElementById("decks").innerHTML = html;
 
     battle = new Battle(deckFighter1, deckFighter2);
+
+    battle.subscribe(beNotified);
     battle.fight();
+
+    //html = "";
+    //for (let i = 0; i < 3; i++) {
+        //battle.fightOneTurn();
+        //battle.phaseUpdateLeaders();
+        //html += DisplayMng.displayBattle(battle);
+    //}
+    
+    //document.getElementById("battle").innerHTML = html;
+
+    //console.log(battle.toJSON());
 
 
     //test100Decks();
@@ -76,5 +89,16 @@ function test100Decks() {
         battle.fight();
     }
     isTest = false;
+}
+
+function beNotified(_evt, _battle) {
+    if (_evt == EVT_TURN_END ||
+        _evt == EVT_FIGHT_START) {
+        let html = document.getElementById("battle").innerHTML;
+        html += DisplayMng.displayBattle(battle, "BATTLE " + _battle.turn + " " + _evt);
+        document.getElementById("battle").innerHTML = html;
+        //console.log("bn");
+    }
+    
 }
 

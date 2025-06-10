@@ -22,6 +22,21 @@
     font-size: 14px;
 }
 
+.leader {
+    border: 2px solid #000000;
+}
+
+.dead {
+    background-color: #808080;
+}
+
 .vs {
     text-align:center;
+}
+
+.bf1, .bf2 {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping to the next row */
+    //justify-content: space-between; /* Adjusts spacing between cards */
+    gap: 10px; /* Adds spacing between cards */
 }

@@ -1,23 +1,32 @@
 "use strict";
 
+//events
+const EVT_NEW_LEADER = "new_leader";
+const EVT_TURN_START = "turn_start";
+const EVT_FIGHT_START = "fight_start";
+const EVT_TURN_END = "turn_end";
 class Battle {
     constructor(deck1, deck2) {
         this.battlefield = [];
         this.battlefield[0] = [];
         this.battlefield[1] = [];
         this.decks = [deck1, deck2];
-        this.indexes = [-1, -1];
+        this.leaderIndexes = [-1, -1];
         this.energies = [0, 0];
         this.losers = [false, false];
-        this.tmpDecks = [deck1.copy(), deck2.copy()];
+        this.battleDecks = [deck1.copy(), deck2.copy()];
         this.turn = 0;
+
+        //events
+        this.listeners = [];
     }
 
 
     fight() {
         for (let i = 0; i < MAX_TURNS; i++) {
-            this.turn++;
+            
             this.fightOneTurn();
+
             if (i >= MAX_TURNS - 1) {
                 console.log("Max turns reached. Ending fight.");
                 this.losers[0] = true;
@@ -29,57 +38,18 @@ class Battle {
 
     fightOneTurn() {
 
+        this.turn++;
+
         if (!isTest)
             console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
 
-        // Update leaders
-        for (let b = 0; b < this.battlefield.length; b++) {
-            if (this.leaders[b] == undefined || this.leaders[b].life <= 0) {
-                this.indexes[b] = -1; // Reset index if leader is dead
-                for (let c = 0; c < this.battlefield[b].length; c++) {
-                    if (this.battlefield[b][c].life > 0) {
-                        this.indexes[b] = c;
-                        break;
-                    }
-                }
-                if (this.indexes[b] == -1) {
-                    if (this.tmpDecks[b].getSize() > 0) {
-                        this.battlefield[b].push(new IngameCard(this.tmpDecks[b].getTopCard()));
-                        this.tmpDecks[b].removeTopCard();
-                        this.indexes[b] = this.battlefield[b].length - 1;
-                    } else {
-                        this.losers[b] = true;
-                    }
-                }
-            }
-        }
+        this.notify(EVT_TURN_START, this);
+
+        this.phaseUpdateLeaders();
 
         if (this.checkVictory()) return;// break;
 
-        //Effects start & loop
-        for (let b = 0; b < this.battlefield.length; b++) {
-            this.battlefield[b].forEach((card) => {
-                if (card.life <= 0) return; // Skip dead cards
-
-                if (card.age <= 0) {
-                    card.effect_start.forEach(effect => {
-                        effects.get(effect).effect(card, this, b);
-                    });
-                }
-
-            });
-        }
-
-        for (let b = 0; b < this.battlefield.length; b++) {
-            this.battlefield[b].forEach((card) => {
-                if (card.life <= 0) return; // Skip dead cards
-
-                card.effect_loop.forEach(effect => {
-                    effects.get(effect).effect(card, this, b);
-                });
-
-            });
-        }
+        this.phaseApplyEffects();
 
         if (!isTest)
             console.log(this.displayBfConsole());
@@ -87,21 +57,16 @@ class Battle {
         if (!isTest)
             console.log("FIGHT !!!")
 
-        //apply damage
-        if (this.leaders[0].life > 0 && this.leaders[1].life > 0) {
-            this.leaders[0].life -= this.leaders[1].attack;
-            this.leaders[1].life -= this.leaders[0].attack;
-        }
+        this.notify(EVT_FIGHT_START, this);
 
-        //age cards
-        for (let j = 0; j < this.battlefield.length; j++) {
-            this.battlefield[j].forEach((card) => {
-                card.age++;
-            });
-        }
+        this.phaseApplyDamages();
+
+        this.phaseAgeCards();
 
         if (!isTest)
             console.log(this.displayBfConsole());
+
+        this.notify(EVT_TURN_END, this);
 
 
     }
@@ -110,7 +75,7 @@ class Battle {
         let cs = "";
         for (let b = 0; b < this.battlefield.length; b++) {
             this.battlefield[b].forEach((card, idx) => {
-                if (idx == this.indexes[b])
+                if (idx == this.leaderIndexes[b])
                     cs += "[";
                 if (card.life <= 0) {
                     cs += "X";
@@ -122,7 +87,7 @@ class Battle {
                     cs += "age: " + card.age + " ";
                     //cs += "energy: " + card.energy + " ";
                 }
-                if (idx == this.indexes[b])
+                if (idx == this.leaderIndexes[b])
                     cs += "]";
                 cs += " | ";
             }
@@ -162,6 +127,93 @@ class Battle {
     }
 
     get leaders() {
-        return [this.battlefield[0][this.indexes[0]], this.battlefield[1][this.indexes[1]]];
+        return [this.battlefield[0][this.leaderIndexes[0]], this.battlefield[1][this.leaderIndexes[1]]];
+    }
+
+    phaseUpdateLeaders() {
+        // Update leaders
+        for (let b = 0; b < this.battlefield.length; b++) {
+            if (this.leaders[b] == undefined || this.leaders[b].life <= 0) {
+
+                this.leaderIndexes[b] = this.lookForALeaderIndexOnBattlefield(this.battlefield[b]);
+
+                if (this.leaderIndexes[b] == -1) {
+                    if (this.battleDecks[b].getSize() > 0) {
+                        this.drawOnBattlefied(this.battleDecks[b], this.battlefield[b]);
+                        this.leaderIndexes[b] = this.battlefield[b].length - 1;
+                    } else {
+                        this.losers[b] = true;
+                    }
+                }
+
+                this.notify(EVT_NEW_LEADER);
+            }
+        }
+    }
+
+    phaseApplyEffects() {
+        //Effects start & loop
+        for (let b = 0; b < this.battlefield.length; b++) {
+            this.battlefield[b].forEach((card) => {
+                if (card.life <= 0) return; // Skip dead cards
+
+                if (card.age <= 0) {
+                    card.effect_start.forEach(effect => {
+                        effects.get(effect).effect(card, this, b);
+                    });
+                }
+
+            });
+        }
+
+        for (let b = 0; b < this.battlefield.length; b++) {
+            this.battlefield[b].forEach((card) => {
+                if (card.life <= 0) return; // Skip dead cards
+
+                card.effect_loop.forEach(effect => {
+                    effects.get(effect).effect(card, this, b);
+                });
+
+            });
+        }
+    }
+
+    phaseApplyDamages() {
+        if (this.leaders[0].life > 0 && this.leaders[1].life > 0) {
+            this.leaders[0].life -= this.leaders[1].attack;
+            this.leaders[1].life -= this.leaders[0].attack;
+        }
+    }
+
+    phaseAgeCards() {
+        for (let j = 0; j < this.battlefield.length; j++) {
+            this.battlefield[j].forEach((card) => {
+                card.age++;
+            });
+        }
+    }
+
+    drawOnBattlefied(sourceDeck, targetDeck) {
+        targetDeck.push(new IngameCard(sourceDeck.getTopCard()));
+        sourceDeck.removeTopCard();
+    }
+
+    lookForALeaderIndexOnBattlefield(battlefield) {
+        let tmpLeaderIndex = -1
+        for (let c = 0; c < battlefield.length; c++) {
+            if (battlefield[c].life > 0) {
+                tmpLeaderIndex = c;
+                break;
+            }
+        }
+        return tmpLeaderIndex;
+    }
+
+    notify(_evt, _arg = this) {
+        this.listeners.forEach((l) => l(_evt, _arg));
+    }
+
+    subscribe(l) {
+        this.listeners.push(l);
     }
 }

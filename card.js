@@ -19,4 +19,8 @@ class Card {
         });
         return power;
     }
+
+    copy() {
+        return new Card(this.attack, this.life, [...this.effect_start], [...this.effect_loop]);
+    }
 }
