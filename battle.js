@@ -1,4 +1,5 @@
 "use strict";
+const IngameCard = require('./ingameCard');
 
 //events
 const EVT_NEW_LEADER = "new_leader";
@@ -24,7 +25,7 @@ class Battle {
 
     fight() {
         for (let i = 0; i < MAX_TURNS; i++) {
-            
+
             this.fightOneTurn();
 
             if (i >= MAX_TURNS - 1) {
@@ -217,3 +218,5 @@ class Battle {
         this.listeners.push(l);
     }
 }
+
+module.exports = Battle;

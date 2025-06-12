@@ -1,4 +1,6 @@
 "use strict";
+const Card = require('./card');
+
 class IngameCard extends Card {
 
 	#age; // Age of the card in turns
@@ -6,7 +8,7 @@ class IngameCard extends Card {
 
 	constructor(_card) {
 		super(_card.attack, _card.life, _card.effect_start, _card.effect_loop);
-		this.#age = 0; 
+		this.#age = 0;
 		this.#energy = 0; // Energy of the card, used for effects
 	}
 
@@ -25,5 +27,7 @@ class IngameCard extends Card {
 	set energy(value) {
 		this.#energy = value;
 	}
-	
+
 }
+
+module.exports = IngameCard;

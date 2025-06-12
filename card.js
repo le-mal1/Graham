@@ -24,3 +24,5 @@ class Card {
         return new Card(this.attack, this.life, [...this.effect_start], [...this.effect_loop]);
     }
 }
+
+module.exports = Card;

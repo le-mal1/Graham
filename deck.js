@@ -52,10 +52,12 @@ class Deck {
             power += card.getPower();
         });
         return power;
-        
+
     }
 
     getSize() {
         return this.cards.length;
     }
 }
+
+module.exports = Deck;
