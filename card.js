@@ -1,6 +1,6 @@
 "use strict";
 
-import { effects } from './preambule.js';
+//import { effects } from './preambule.js';
 
 export class Card {
     constructor(_attack, _life, _effects_start, _effects_loop) {
@@ -13,12 +13,12 @@ export class Card {
     getPower() {
         let power = this.attack + this.life;
 
-        this.effect_start.forEach(effect => {
+        /*this.effect_start.forEach(effect => {
             power += effects.get(effect).power;
         });
         this.effect_loop.forEach(effect => {
             power += effects.get(effect).power + 4;
-        });
+        });*/
         return power;
     }
 
