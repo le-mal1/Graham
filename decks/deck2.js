@@ -1,4 +1,5 @@
 import { Card } from '../card.js';
+import { Deck } from '../deck.js';
 import { deckLibrary } from '../preambule.js';
 import * as EFFECTS from '../effect.js';
 

@@ -1,6 +1,7 @@
 "use strict";
 
 import { Card } from '../card.js';
+import { Deck } from './deck.js';
 import { Battle } from './battle.js';
 import { EVT_TURN_START } from './battle.js';
 import { EVT_FIGHT_START } from './battle.js';

@@ -1,6 +1,6 @@
 "use strict";
 
-class Deck {
+export class Deck {
 
     constructor() {
         this.cards = [];
@@ -52,7 +52,7 @@ class Deck {
             power += card.getPower();
         });
         return power;
-        
+
     }
 
     getSize() {
