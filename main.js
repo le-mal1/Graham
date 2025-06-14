@@ -1,11 +1,20 @@
 "use strict";
 
-const MAX_TURNS = 20;
+import { Card } from '../card.js';
+import { Battle } from './battle.js';
+import { EVT_TURN_START } from './battle.js';
+import { EVT_FIGHT_START } from './battle.js';
+import { EVT_TURN_END } from './battle.js';
+import { deckLibrary } from './preambule.js';
+import { EFFECTS } from './effect.const.js';
+
+//const MAX_TURNS = 20;
+//const isTest = false;
 
 var deckFighter1;
 var deckFighter2;
 var battle;
-var isTest = false;
+
 
 main();
 
@@ -50,11 +59,11 @@ function main() {
 
     //html = "";
     //for (let i = 0; i < 3; i++) {
-        //battle.fightOneTurn();
-        //battle.phaseUpdateLeaders();
-        //html += DisplayMng.displayBattle(battle);
+    //battle.fightOneTurn();
+    //battle.phaseUpdateLeaders();
+    //html += DisplayMng.displayBattle(battle);
     //}
-    
+
     //document.getElementById("battle").innerHTML = html;
 
     //console.log(battle.toJSON());
@@ -99,6 +108,6 @@ function beNotified(_evt, _battle) {
         document.getElementById("battle").innerHTML = html;
         //console.log("bn");
     }
-    
+
 }
 

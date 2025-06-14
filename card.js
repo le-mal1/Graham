@@ -1,6 +1,8 @@
 "use strict";
 
-class Card {
+import { effects } from './preambule.js';
+
+export class Card {
     constructor(_attack, _life, _effects_start, _effects_loop) {
         this.attack = _attack; // Attack points
         this.life = _life; // Life points

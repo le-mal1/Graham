@@ -1,0 +1,9 @@
+export const EMPTY = " ";
+export const HEAL = "Life+";
+export const INCREASE_ATTACK = "Attack+";
+export const INCREASE_ENERGY = "Energy+";
+export const DESTROY = "Destroy";
+export const HIT_LEADER = "Hit Leader";
+export const CALL_LEADER = "Call Leader";
+export const CALL_SUPPORT = "Call Support";
+export const EFFECTS = [EMPTY, HEAL, INCREASE_ATTACK, INCREASE_ENERGY, DESTROY, HIT_LEADER, CALL_LEADER, CALL_SUPPORT];

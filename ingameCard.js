@@ -1,12 +1,15 @@
 "use strict";
-class IngameCard extends Card {
+
+import { Card } from './card.js';
+
+export class IngameCard extends Card {
 
 	#age; // Age of the card in turns
 	#energy;
 
 	constructor(_card) {
 		super(_card.attack, _card.life, _card.effect_start, _card.effect_loop);
-		this.#age = 0; 
+		this.#age = 0;
 		this.#energy = 0; // Energy of the card, used for effects
 	}
 
@@ -25,5 +28,5 @@ class IngameCard extends Card {
 	set energy(value) {
 		this.#energy = value;
 	}
-	
+
 }

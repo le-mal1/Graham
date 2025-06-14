@@ -1,11 +1,20 @@
 "use strict";
 
+import { MAX_TURNS } from './constants.js';
+import { IS_TEST } from './constants.js';
+import { IngameCard } from './ingameCard.js';
+import { effects } from './preambule.js';
+import * as EFFECTS from './effect.const.js';
+
 //events
-const EVT_NEW_LEADER = "new_leader";
-const EVT_TURN_START = "turn_start";
-const EVT_FIGHT_START = "fight_start";
-const EVT_TURN_END = "turn_end";
-class Battle {
+export const EVT_NEW_LEADER = "new_leader";
+export const EVT_TURN_START = "turn_start";
+export const EVT_FIGHT_START = "fight_start";
+export const EVT_TURN_END = "turn_end";
+
+
+
+export class Battle {
     constructor(deck1, deck2) {
         this.battlefield = [];
         this.battlefield[0] = [];
@@ -24,7 +33,7 @@ class Battle {
 
     fight() {
         for (let i = 0; i < MAX_TURNS; i++) {
-            
+
             this.fightOneTurn();
 
             if (i >= MAX_TURNS - 1) {
@@ -40,7 +49,7 @@ class Battle {
 
         this.turn++;
 
-        if (!isTest)
+        if (!IS_TEST)
             console.log("== TURN: " + this.turn + " == " + this.energies[0] + "/" + this.energies[1]);
 
         this.notify(EVT_TURN_START, this);
@@ -51,10 +60,10 @@ class Battle {
 
         this.phaseApplyEffects();
 
-        if (!isTest)
+        if (!IS_TEST)
             console.log(this.displayBfConsole());
 
-        if (!isTest)
+        if (!IS_TEST)
             console.log("FIGHT !!!")
 
         this.notify(EVT_FIGHT_START, this);
@@ -63,7 +72,7 @@ class Battle {
 
         this.phaseAgeCards();
 
-        if (!isTest)
+        if (!IS_TEST)
             console.log(this.displayBfConsole());
 
         this.notify(EVT_TURN_END, this);
@@ -82,8 +91,8 @@ class Battle {
                 } else {
                     cs += "att: " + card.attack + " ";
                     cs += "life: " + card.life + " ";
-                    cs += card.effect_start[0] != EFFECT_EMPTY ? "start: " + card.effect_start + " " : "";
-                    cs += card.effect_loop[0] != EFFECT_EMPTY ? "loop: " + card.effect_loop + " " : "";
+                    cs += card.effect_start[0] != EFFECTS.EMPTY ? "start: " + card.effect_start + " " : "";
+                    cs += card.effect_loop[0] != EFFECTS.EMPTY ? "loop: " + card.effect_loop + " " : "";
                     cs += "age: " + card.age + " ";
                     //cs += "energy: " + card.energy + " ";
                 }
