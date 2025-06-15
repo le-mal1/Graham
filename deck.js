@@ -1,5 +1,7 @@
 "use strict";
 
+import { Card } from './card.js';
+
 export class Deck {
 
     constructor() {
@@ -57,5 +59,14 @@ export class Deck {
 
     getSize() {
         return this.cards.length;
+    }
+
+    importJSON(json) {
+        this.cards = [];
+        json.forEach(cardData => {
+            let card = new Card(cardData.attack, cardData.life, cardData.effect_start, cardData.effect_loop);
+            this.addCard(card);
+        });
+        return this;
     }
 }
