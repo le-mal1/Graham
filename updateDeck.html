@@ -7,12 +7,14 @@
     <script type="module">
         import { deckLibrary } from './preambule.js';
         import { Card } from './card.js';
+        import * as EFFECTS_CONST from './effect.const.js';
 
         // List of deck files and names (update as needed to match files in decks/)
         const deckFiles = [
             { file: 'deck1.js', name: 'deck1' },
             { file: 'deck2.js', name: 'deck2' }
         ];
+        const EFFECTS = EFFECTS_CONST.EFFECTS;
 
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -30,17 +32,32 @@
             deckListDiv.innerHTML = html;
         }
 
+        function effectSelect(name, selectedValues, idx) {
+            // selectedValues: array of selected effect names
+            let html = `<select name="${name}" multiple size="4" data-idx="${idx}">`;
+            EFFECTS.forEach(effect => {
+                // Use value and label as effect
+                const selected = selectedValues && selectedValues.includes(effect) ? 'selected' : '';
+                html += `<option value="${effect}" ${selected}>${effect}</option>`;
+            });
+            html += `</select>`;
+            return html;
+        }
+
         function cardToForm(card, idx) {
-            const effectStart = (card.effect_start || []).join(',');
-            const effectLoop = (card.effect_loop || []).join(',');
+            // effect_start and effect_loop are arrays of effect names
             return `
-                <div>
+                <div class="card-edit-block">
                     <h4>Card ${idx + 1}</h4>
                     <input type="hidden" name="cardIdx" value="${idx}">
-                    <label>Attack: <input type="number" name="attack" value="${card.attack}"></label><br>
-                    <label>Life: <input type="number" name="life" value="${card.life}"></label><br>
-                    <label>Effect Start (comma separated): <input type="text" name="effect_start" value="${effectStart}"></label><br>
-                    <label>Effect Loop (comma separated): <input type="text" name="effect_loop" value="${effectLoop}"></label><br>
+                    <label>Attack: <input type="number" name="attack" value="${card.attack}" required></label><br>
+                    <label>Life: <input type="number" name="life" value="${card.life}" required></label><br>
+                    <label>Effect Start (hold Ctrl to select multiple):<br>
+                        ${effectSelect("effect_start", card.effect_start, idx)}
+                    </label><br>
+                    <label>Effect Loop (hold Ctrl to select multiple):<br>
+                        ${effectSelect("effect_loop", card.effect_loop, idx)}
+                    </label><br>
                     <hr>
                 </div>
             `;
@@ -56,43 +73,161 @@
             }
         }
 
+        function updateJsonFieldFromForm() {
+            const form = document.getElementById('cardsForm');
+            if (!form) {
+                document.getElementById('deckJson').value = '';
+                return;
+            }
+            const cardDivs = Array.from(form.querySelectorAll('.card-edit-block'));
+            const cardsJson = cardDivs.map(div => {
+                const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
+                const life = parseInt(div.querySelector('input[name="life"]').value, 10);
+                const effect_start = getSelectedValues(div.querySelector('select[name="effect_start"]'));
+                const effect_loop = getSelectedValues(div.querySelector('select[name="effect_loop"]'));
+                return {
+                    attack,
+                    life,
+                    effect_start,
+                    effect_loop
+                };
+            });
+            document.getElementById('deckJson').value = JSON.stringify(cardsJson, null, 2);
+        }
+
+        function attachLiveUpdateListeners() {
+            const form = document.getElementById('cardsForm');
+            if (!form) return;
+            // Listen to input and change events on all relevant fields
+            form.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('input', updateJsonFieldFromForm);
+                el.addEventListener('change', updateJsonFieldFromForm);
+            });
+        }
+
         async function loadDeck() {
             await importDeckFiles(); // Ensure decks are loaded before using deckLibrary
             displayDeckList();
             const deckName = getQueryParam('deck');
             document.getElementById('deckFileName').textContent = deckName ? deckName : '(none)';
+            const formDiv = document.getElementById('deckCards');
             if (!deckName) {
-                document.getElementById('deckCards').innerHTML = "<i>No deck parameter provided in URL.</i>";
+                formDiv.innerHTML = "<i>No deck parameter provided in URL.</i>";
+                updateJsonField(null);
                 return;
             }
             if (!deckLibrary.has(deckName)) {
-                document.getElementById('deckCards').innerHTML = "Deck not found: " + deckName;
+                formDiv.innerHTML = "Deck not found: " + deckName;
+                updateJsonField(null);
                 return;
             }
             const deck = deckLibrary.get(deckName);
-            // Display cards
-            let html = "<h3>Cards in this deck:</h3><ul>";
+            // Display editable form for cards
+            let html = `<form id="cardsForm">
+                <h3>Edit Cards in this deck:</h3>
+            `;
             deck.getCards().forEach((card, idx) => {
-                html += `<li>
-                    <b>Card ${idx + 1}:</b> 
-                    Attack: ${card.attack}, 
-                    Life: ${card.life}, 
-                    Effect Start: [${(card.effect_start || []).join(", ")}], 
-                    Effect Loop: [${(card.effect_loop || []).join(", ")}]
-                </li>`;
+                html += cardToForm(card, idx);
             });
-            html += "</ul>";
-            document.getElementById('deckCards').innerHTML = html;
+            //html += `<button type="submit">Save Changes</button>`;
+            html += `</form>`;
+            formDiv.innerHTML = html;
+
+            // Attach submit handler
+            document.getElementById('cardsForm').onsubmit = handleSubmit;
+
+            // Attach live update listeners
+            attachLiveUpdateListeners();
+
+            // Show JSON
+            updateJsonField(deck);
         }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const deckName = getQueryParam('deck');
+            if (!deckLibrary.has(deckName)) return;
+            const deck = deckLibrary.get(deckName);
+            const form = event.target;
+            const cardDivs = Array.from(form.querySelectorAll('.card-edit-block'));
+            deck.cards = [];
+            const cardsJson = [];
+            cardDivs.forEach(div => {
+                const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
+                const life = parseInt(div.querySelector('input[name="life"]').value, 10);
+                const effect_start = getSelectedValues(div.querySelector('select[name="effect_start"]'));
+                const effect_loop = getSelectedValues(div.querySelector('select[name="effect_loop"]'));
+                deck.addCard(new Card(attack, life, effect_start, effect_loop));
+                cardsJson.push({
+                    attack,
+                    life,
+                    effect_start,
+                    effect_loop
+                });
+            });
+
+            // Try to save to a JSON file using fetch to a backend endpoint (requires server support)
+            try {
+                const response = await fetch(`./decks/${deckName}.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cardsJson, null, 2)
+                });
+                if (response.ok) {
+                    alert("Deck updated and saved to decks/" + deckName + ".json");
+                } else {
+                    alert("Deck updated in memory, but failed to save JSON file (server must support PUT to /decks/).");
+                }
+            } catch (e) {
+                alert("Deck updated in memory, but could not save JSON file (no server support).");
+            }
+
+            // Update JSON field after save
+            updateJsonField(deck);
+        }
+
+        function getSelectedValues(select) {
+            // Returns an array of selected option values
+            return Array.from(select.selectedOptions).map(opt => opt.value);
+        }
+
+        function updateJsonField(deck) {
+            const jsonField = document.getElementById('deckJson');
+            if (!deck) {
+                jsonField.value = '';
+                return;
+            }
+            const cardsJson = deck.getCards().map(card => ({
+                attack: card.attack,
+                life: card.life,
+                effect_start: card.effect_start,
+                effect_loop: card.effect_loop
+            }));
+            jsonField.value = JSON.stringify(cardsJson, null, 2);
+        }
+
+        // Add copy functionality
+        window.copyDeckJson = function () {
+            const jsonField = document.getElementById('deckJson');
+            jsonField.select();
+            jsonField.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+        };
 
         window.onload = loadDeck;
     </script>
 </head>
 
 <body>
+    <div><a href="listDeckFiles.html">Back to List</a></div>
     <div id="deckList"></div>
     <h2>Edit Cards for Deck: <span id="deckFileName"></span></h2>
     <div id="deckCards"></div>
+    <h3 style="display:inline;">Deck JSON</h3>
+    <button style="float:right;" onclick="copyDeckJson()">COPY</button>
+    <textarea id="deckJson" style="width:100%;height:200px;" readonly></textarea>
 </body>
 
 </html>
