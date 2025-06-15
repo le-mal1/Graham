@@ -148,8 +148,9 @@ export class Battle {
 
                 if (this.leaderIndexes[b] == -1) {
                     if (this.battleDecks[b].getSize() > 0) {
-                        this.drawOnBattlefied(this.battleDecks[b], this.battlefield[b]);
-                        this.leaderIndexes[b] = this.battlefield[b].length - 1;
+                        this.leaderIndexes[b] = this.battlefield[b].length; //place the future index (because several cards can be called in a row)
+                        this.drawOnBattlefied(this.battleDecks[b], this.battlefield[b]); //Be careful, drw can draw several cards                        
+
                     } else {
                         this.losers[b] = true;
                     }
@@ -168,7 +169,9 @@ export class Battle {
 
                 if (card.age <= 0) {
                     card.effect_start.forEach(effect => {
+                        //if (effect != EFFECTS.CALL_LEADER && effect != EFFECTS.CALL_SUPPORT) {
                         effects.get(effect).effect(card, this, b);
+                        //}
                     });
                 }
 
@@ -203,9 +206,18 @@ export class Battle {
     }
 
     drawOnBattlefied(sourceDeck, targetDeck) {
-        targetDeck.push(new IngameCard(sourceDeck.getTopCard()));
+        let tmpInGameCard = new IngameCard(sourceDeck.getTopCard());
+        targetDeck.push(tmpInGameCard);
         sourceDeck.removeTopCard();
+
+        //apply start effects for CALLS
+        tmpInGameCard.effect_start.forEach(effect => {
+            if (effect == EFFECTS.CALL_LEADER || effect == EFFECTS.CALL_SUPPORT) {
+                effects.get(effect).effect(tmpInGameCard, this, sourceDeck == this.battleDecks[0] ? 0 : 1); //TO REFACTOR LAST PARAM
+            }
+        });
     }
+
 
     lookForALeaderIndexOnBattlefield(battlefield) {
         let tmpLeaderIndex = -1
