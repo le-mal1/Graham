@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Deck Files List</title>
+    <script type="module">
+        import { deckLibrary } from './preambule.js';
+        // List of deck files (static, update as needed)
+        const deckFiles = [
+            { file: 'deck1.js', name: 'deck1' },
+            { file: 'deck2.js', name: 'deck2' }
+        ];
+
+        async function listDeckFiles() {
+            const deckListDiv = document.getElementById('deckFiles');
+            // Dynamically import each deck file to ensure it's loaded and registered in deckLibrary
+            for (const deck of deckFiles) {
+                try {
+                    await import(`./decks/${deck.file}`);
+                } catch (e) {
+                    // Ignore if file not found or import fails
+                }
+            }
+            let html = '<b>Deck files:</b><ul>';
+            for (const deck of deckFiles) {
+                let size = '';
+                if (deckLibrary.has(deck.name)) {
+                    size = deckLibrary.get(deck.name).getSize();
+                } else {
+                    size = '?';
+                }
+                html += `<li>${deck.file} <b>${deck.name}</b> (${size})</li>`;
+            }
+            html += '</ul>';
+            deckListDiv.innerHTML = html;
+        }
+        window.onload = listDeckFiles;
+    </script>
+</head>
+
+<body>
+    <h2>Files in the "decks" folder</h2>
+    <div id="deckFiles">Loading...</div>
+</body>
+
+</html>
