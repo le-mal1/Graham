@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Deck Cards</title>
+    <script type="module">
+        import { deckLibrary } from './preambule.js';
+        import { Card } from './card.js';
+
+        // List of deck files and names (update as needed to match files in decks/)
+        const deckFiles = [
+            { file: 'deck1.js', name: 'deck1' },
+            { file: 'deck2.js', name: 'deck2' }
+        ];
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function displayDeckList() {
+            const deckListDiv = document.getElementById('deckList');
+            let html = "<b>Available decks:</b> ";
+            deckFiles.forEach(deck => {
+                if (deckLibrary.has(deck.name)) {
+                    html += `<a href="?deck=${encodeURIComponent(deck.name)}">${deck.name}</a> `;
+                }
+            });
+            deckListDiv.innerHTML = html;
+        }
+
+        function cardToForm(card, idx) {
+            const effectStart = (card.effect_start || []).join(',');
+            const effectLoop = (card.effect_loop || []).join(',');
+            return `
+                <div>
+                    <h4>Card ${idx + 1}</h4>
+                    <input type="hidden" name="cardIdx" value="${idx}">
+                    <label>Attack: <input type="number" name="attack" value="${card.attack}"></label><br>
+                    <label>Life: <input type="number" name="life" value="${card.life}"></label><br>
+                    <label>Effect Start (comma separated): <input type="text" name="effect_start" value="${effectStart}"></label><br>
+                    <label>Effect Loop (comma separated): <input type="text" name="effect_loop" value="${effectLoop}"></label><br>
+                    <hr>
+                </div>
+            `;
+        }
+
+        async function importDeckFiles() {
+            for (const deck of deckFiles) {
+                try {
+                    await import(`./decks/${deck.file}`);
+                } catch (e) {
+                    // Ignore if file not found or import fails
+                }
+            }
+        }
+
+        async function loadDeck() {
+            await importDeckFiles(); // Ensure decks are loaded before using deckLibrary
+            displayDeckList();
+            const deckName = getQueryParam('deck');
+            document.getElementById('deckFileName').textContent = deckName ? deckName : '(none)';
+            if (!deckName) {
+                document.getElementById('deckCards').innerHTML = "<i>No deck parameter provided in URL.</i>";
+                return;
+            }
+            if (!deckLibrary.has(deckName)) {
+                document.getElementById('deckCards').innerHTML = "Deck not found: " + deckName;
+                return;
+            }
+            const deck = deckLibrary.get(deckName);
+            // Display cards
+            let html = "<h3>Cards in this deck:</h3><ul>";
+            deck.getCards().forEach((card, idx) => {
+                html += `<li>
+                    <b>Card ${idx + 1}:</b> 
+                    Attack: ${card.attack}, 
+                    Life: ${card.life}, 
+                    Effect Start: [${(card.effect_start || []).join(", ")}], 
+                    Effect Loop: [${(card.effect_loop || []).join(", ")}]
+                </li>`;
+            });
+            html += "</ul>";
+            document.getElementById('deckCards').innerHTML = html;
+        }
+
+        window.onload = loadDeck;
+    </script>
+</head>
+
+<body>
+    <div id="deckList"></div>
+    <h2>Edit Cards for Deck: <span id="deckFileName"></span></h2>
+    <div id="deckCards"></div>
+</body>
+
+</html>

@@ -30,7 +30,7 @@
                 } else {
                     size = '?';
                 }
-                html += `<li>${deck.file} <b>${deck.name}</b> (${size})</li>`;
+                html += `<li>${deck.file} <a href="updateDeck.html?deck=${encodeURIComponent(deck.name)}"><b>${deck.name}</b></a> (${size})</li>`;
             }
             html += '</ul>';
             deckListDiv.innerHTML = html;
