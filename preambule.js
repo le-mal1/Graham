@@ -17,7 +17,7 @@ effects.set(EFFECTS.DESTROY, {
 
     }
 });
-effects.set(EFFECTS.HIT_LEADER, { name: EFFECTS.HIT_LEADER, power: 1, effect: function (card, battle, idPlayer) { battle.leaders[1 - idPlayer].life -= 1; } });
+effects.set(EFFECTS.HIT_LEADER, { name: EFFECTS.HIT_LEADER, power: 1, effect: function (card, battle, idPlayer) { battle.leaders[1 - idPlayer].life -= 1; } }); //TODO: make it work onDraw first card (when there is no opponent card yet)
 effects.set(EFFECTS.CALL_LEADER, {
     name: EFFECTS.CALL_LEADER, power: 1, effect: function (card, battle, idPlayer) {
         if (battle.battleDecks[idPlayer].getSize() > 0) {
