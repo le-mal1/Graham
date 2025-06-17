@@ -48,7 +48,7 @@
             // effects_onDraw and effects_eachTurn are arrays of effect names
             return `
                 <div class="card-edit-block">
-                    <h4>Card ${idx + 1}</h4>
+                    <h4>Card ${idx + 1} (Power: ${card.getPower()})</h4>
                     <input type="hidden" name="cardIdx" value="${idx}">
                     <label>Attack: <input type="number" name="attack" value="${card.attack}" required></label><br>
                     <label>Life: <input type="number" name="life" value="${card.life}" required></label><br>

@@ -91,8 +91,8 @@ export class Battle {
                 } else {
                     cs += "att: " + card.attack + " ";
                     cs += "life: " + card.life + " ";
-                    cs += card.effects_onDraw[0] != EFFECTS.EMPTY ? "start: " + card.effects_onDraw + " " : "";
-                    cs += card.effects_eachTurn[0] != EFFECTS.EMPTY ? "loop: " + card.effects_eachTurn + " " : "";
+                    cs += card.effects_onDraw[0] != EFFECTS.EMPTY ? "onDraw: " + card.effects_onDraw + " " : "";
+                    cs += card.effects_eachTurn[0] != EFFECTS.EMPTY ? "eachTurn: " + card.effects_eachTurn + " " : "";
                     cs += "age: " + card.age + " ";
                     //cs += "energy: " + card.energy + " ";
                 }

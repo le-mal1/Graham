@@ -40,8 +40,8 @@ class DisplayMng {
         html += "<div class='" + attributesCard + "'>";
         html += "<div class='att'>Att: " + card.attack + "</div>";
         html += "<div class='life'>Life: " + card.life + "</div>";
-        html += "<div class='effects_onDraw'>Start: " + (card.effects_onDraw ? card.effects_onDraw : "None") + "</div>";
-        html += "<div class='effects_eachTurn'>Loop: " + (card.effects_eachTurn ? card.effects_eachTurn : "None") + "</div>";
+        html += "<div class='effects_onDraw'>OnDraw: " + (card.effects_onDraw ? card.effects_onDraw : "None") + "</div>";
+        html += "<div class='effects_eachTurn'>EachTurn: " + (card.effects_eachTurn ? card.effects_eachTurn : "None") + "</div>";
         html += "----";
         html += "<div class='power'>Power: " + card.getPower() + "</div>";
         html += "<div class='age'>Age: " + (card.age ? card.age : 0) + "</div>";

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Card } from '../card.js';
+import * as EFFECTS from '../effect.const.js';
 
 
 test('Card constructor sets properties correctly', () => {
@@ -12,10 +13,10 @@ test('Card constructor sets properties correctly', () => {
 });
 
 test('Card getPower calculates power correctly', () => {
-    const card = new Card(3, 5, ['heal'], ['damage']);
+    const card = new Card(3, 5, [EFFECTS.HEAL], [EFFECTS.DESTROY]);
     const power = card.getPower();
     // Assuming effects have a power of 0 for simplicity
-    assert.strictEqual(power, 8); // 3 (attack) + 5 (life)
+    assert.strictEqual(power, 3 + 5 + 1 + 4 * 4); // 3 (attack) + 5 (life) + 1 (heal) + 4 (destroy) + multipler loop effect
 });
 
 test('Card copy creates a new instance', () => {
