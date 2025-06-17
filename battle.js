@@ -148,8 +148,7 @@ export class Battle {
 
                 if (this.leaderIndexes[b] == -1) {
                     if (this.battleDecks[b].getSize() > 0) {
-                        //this.leaderIndexes[b] = this.battlefield[b].length; //place the future index (because several cards can be called in a row)
-                        this.drawLeaderOnBattlefied(this.battleDecks[b], this.battlefield[b]); //Be careful, drw can draw several cards                        
+                        this.drawLeaderOnBattlefied(this.battleDecks[b], this.battlefield[b]); //Be careful, draw can draw several cards                        
 
                     } else {
                         this.losers[b] = true;
@@ -162,8 +161,8 @@ export class Battle {
     }
 
     phaseApplyEffects() {
-        //Effects start & loop
-        for (let b = 0; b < this.battlefield.length; b++) {
+        //Effects start
+        /*for (let b = 0; b < this.battlefield.length; b++) {
             this.battlefield[b].forEach((card) => {
                 if (card.life <= 0) return; // Skip dead cards
 
@@ -176,8 +175,9 @@ export class Battle {
                 }
 
             });
-        }
+        }*/
 
+        //Effects loop
         for (let b = 0; b < this.battlefield.length; b++) {
             this.battlefield[b].forEach((card) => {
                 if (card.life <= 0) return; // Skip dead cards
@@ -210,21 +210,22 @@ export class Battle {
         targetDeck.push(tmpInGameCard);
         sourceDeck.removeTopCard();
 
-        //apply start effects for CALLS
         tmpInGameCard.effect_start.forEach(effect => {
+            /*if (effect == EFFECTS.CALL_LEADER) {
+                this.drawLeaderOnBattlefied(sourceDeck, targetDeck);
+            } else if (effect == EFFECTS.CALL_SUPPORT) {
+                this.drawSupportOnBattlefied(sourceDeck, targetDeck);
+            }*/
+            effects.get(effect).effect(tmpInGameCard, this, sourceDeck == this.battleDecks[0] ? 0 : 1);
+        });
+
+        /*tmpInGameCard.effect_loop.forEach(effect => {
             if (effect == EFFECTS.CALL_LEADER) {
                 this.drawLeaderOnBattlefied(sourceDeck, targetDeck);
             } else if (effect == EFFECTS.CALL_SUPPORT) {
                 this.drawSupportOnBattlefied(sourceDeck, targetDeck);
             }
-        });
-        tmpInGameCard.effect_loop.forEach(effect => {
-            if (effect == EFFECTS.CALL_LEADER) {
-                this.drawLeaderOnBattlefied(sourceDeck, targetDeck);
-            } else if (effect == EFFECTS.CALL_SUPPORT) {
-                this.drawSupportOnBattlefied(sourceDeck, targetDeck);
-            }
-        });
+        });*/
 
     }
 

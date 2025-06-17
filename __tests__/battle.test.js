@@ -213,6 +213,7 @@ test('Battle applies effect CALL_SUPPORT & CALL_LEADER correctly at Loop in a ro
     deck1.addCard(new Card(6, 6, [], [EFFECTS.CALL_LEADER]));
     deck1.addCard(new Card(7, 7, [], [EFFECTS.CALL_SUPPORT]));
     deck1.addCard(new Card(8, 8, [], []));
+    deck1.addCard(new Card(9, 9, [], []));
     deck2.addCard(new Card(2, 3, [], []));
     deck2.addCard(new Card(1, 3, [], []));
 
@@ -221,8 +222,30 @@ test('Battle applies effect CALL_SUPPORT & CALL_LEADER correctly at Loop in a ro
     battle.fight();
 
     assert.strictEqual(battle.battlefield[0].length, 4);
+    assert.strictEqual(battle.leaderIndexes[0], 3);
+    assert.strictEqual(battle.leaders[0].attack, 8);
+    assert.strictEqual(battle.leaders[0].life, 7); // 8 -1 from damage
+    assert.strictEqual(battle.turn, 3);
+});
+
+test('Battle applies effect CALL_LEADER correctly at Loop', () => {
+    const deck1 = new Deck();
+    const deck2 = new Deck();
+    // Add cards with effects
+    deck1.addCard(new Card(5, 5, [], [EFFECTS.CALL_LEADER]));
+    deck1.addCard(new Card(6, 6, [], []));
+    deck1.addCard(new Card(7, 7, [], []));
+    deck1.addCard(new Card(8, 8, [], []));
+    deck2.addCard(new Card(2, 3, [], []));
+    deck2.addCard(new Card(1, 3, [], []));
+
+    const battle = new Battle(deck1, deck2);
+
+    battle.fight();
+
+    assert.strictEqual(battle.battlefield[0].length, 3);
     assert.strictEqual(battle.leaderIndexes[0], 2);
     assert.strictEqual(battle.leaders[0].attack, 7);
-    assert.strictEqual(battle.leaders[0].life, 4); // 7 -2 -1 from damage
+    assert.strictEqual(battle.leaders[0].life, 6); // 7 - 1 from damage
     assert.strictEqual(battle.turn, 3);
 });
