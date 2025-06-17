@@ -8,7 +8,7 @@ export class IngameCard extends Card {
 	#energy;
 
 	constructor(_card) {
-		super(_card.attack, _card.life, _card.effect_start, _card.effect_loop);
+		super(_card.attack, _card.life, _card.effects_onDraw, _card.effects_eachTurn);
 		this.#age = 0;
 		this.#energy = 0; // Energy of the card, used for effects
 	}

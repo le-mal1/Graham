@@ -11,10 +11,10 @@ const jsonDeck =
         {
             "attack": 3,
             "life": 5,
-            "effect_start": [
+            "effects_onDraw": [
                 " "
             ],
-            "effect_loop": [
+            "effects_eachTurn": [
                 " "
             ]
         }

@@ -7,8 +7,8 @@ test('Card constructor sets properties correctly', () => {
     const card = new Card(2, 5, ['heal'], ['damage']);
     assert.strictEqual(card.attack, 2);
     assert.strictEqual(card.life, 5);
-    assert.deepStrictEqual(card.effect_start, ['heal']);
-    assert.deepStrictEqual(card.effect_loop, ['damage']);
+    assert.deepStrictEqual(card.effects_onDraw, ['heal']);
+    assert.deepStrictEqual(card.effects_eachTurn, ['damage']);
 });
 
 test('Card getPower calculates power correctly', () => {
@@ -24,6 +24,6 @@ test('Card copy creates a new instance', () => {
     assert.notStrictEqual(card2, card1);
     assert.strictEqual(card2.attack, 3);
     assert.strictEqual(card2.life, 5);
-    assert.deepStrictEqual(card2.effect_start, ['heal']);
-    assert.deepStrictEqual(card2.effect_loop, ['damage']);
+    assert.deepStrictEqual(card2.effects_onDraw, ['heal']);
+    assert.deepStrictEqual(card2.effects_eachTurn, ['damage']);
 });

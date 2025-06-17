@@ -64,7 +64,7 @@ export class Deck {
     importJSON(json) {
         this.cards = [];
         json.forEach(cardData => {
-            let card = new Card(cardData.attack, cardData.life, cardData.effect_start, cardData.effect_loop);
+            let card = new Card(cardData.attack, cardData.life, cardData.effects_onDraw, cardData.effects_eachTurn);
             this.addCard(card);
         });
         return this;

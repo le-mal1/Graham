@@ -91,8 +91,8 @@ export class Battle {
                 } else {
                     cs += "att: " + card.attack + " ";
                     cs += "life: " + card.life + " ";
-                    cs += card.effect_start[0] != EFFECTS.EMPTY ? "start: " + card.effect_start + " " : "";
-                    cs += card.effect_loop[0] != EFFECTS.EMPTY ? "loop: " + card.effect_loop + " " : "";
+                    cs += card.effects_onDraw[0] != EFFECTS.EMPTY ? "start: " + card.effects_onDraw + " " : "";
+                    cs += card.effects_eachTurn[0] != EFFECTS.EMPTY ? "loop: " + card.effects_eachTurn + " " : "";
                     cs += "age: " + card.age + " ";
                     //cs += "energy: " + card.energy + " ";
                 }
@@ -167,7 +167,7 @@ export class Battle {
                 if (card.life <= 0) return; // Skip dead cards
 
                 if (card.age <= 0) {
-                    card.effect_start.forEach(effect => {
+                    card.effects_onDraw.forEach(effect => {
                         if (effect != EFFECTS.CALL_LEADER && effect != EFFECTS.CALL_SUPPORT) {
                             effects.get(effect).effect(card, this, b);
                         }
@@ -182,7 +182,7 @@ export class Battle {
             this.battlefield[b].forEach((card) => {
                 if (card.life <= 0) return; // Skip dead cards
 
-                card.effect_loop.forEach(effect => {
+                card.effects_eachTurn.forEach(effect => {
                     effects.get(effect).effect(card, this, b);
                 });
 
@@ -210,7 +210,7 @@ export class Battle {
         targetDeck.push(tmpInGameCard);
         sourceDeck.removeTopCard();
 
-        tmpInGameCard.effect_start.forEach(effect => {
+        tmpInGameCard.effects_onDraw.forEach(effect => {
             /*if (effect == EFFECTS.CALL_LEADER) {
                 this.drawLeaderOnBattlefied(sourceDeck, targetDeck);
             } else if (effect == EFFECTS.CALL_SUPPORT) {
@@ -219,7 +219,7 @@ export class Battle {
             effects.get(effect).effect(tmpInGameCard, this, sourceDeck == this.battleDecks[0] ? 0 : 1);
         });
 
-        /*tmpInGameCard.effect_loop.forEach(effect => {
+        /*tmpInGameCard.effects_eachTurn.forEach(effect => {
             if (effect == EFFECTS.CALL_LEADER) {
                 this.drawLeaderOnBattlefied(sourceDeck, targetDeck);
             } else if (effect == EFFECTS.CALL_SUPPORT) {

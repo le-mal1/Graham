@@ -3,26 +3,26 @@
 //import { effects } from './preambule.js';
 
 export class Card {
-    constructor(_attack, _life, _effects_start, _effects_loop) {
+    constructor(_attack, _life, _effects_onDraw, _effects_eachTurn) {
         this.attack = _attack; // Attack points
         this.life = _life; // Life points
-        this.effect_start = _effects_start; // Effect
-        this.effect_loop = _effects_loop; // Effect
+        this.effects_onDraw = _effects_onDraw; // Effect
+        this.effects_eachTurn = _effects_eachTurn; // Effect
     }
 
     getPower() {
         let power = this.attack + this.life;
 
-        /*this.effect_start.forEach(effect => {
+        /*this.effects_onDraw.forEach(effect => {
             power += effects.get(effect).power;
         });
-        this.effect_loop.forEach(effect => {
+        this.effects_eachTurn.forEach(effect => {
             power += effects.get(effect).power + 4;
         });*/
         return power;
     }
 
     copy() {
-        return new Card(this.attack, this.life, [...this.effect_start], [...this.effect_loop]);
+        return new Card(this.attack, this.life, [...this.effects_onDraw], [...this.effects_eachTurn]);
     }
 }

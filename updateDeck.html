@@ -45,7 +45,7 @@
         }
 
         function cardToForm(card, idx) {
-            // effect_start and effect_loop are arrays of effect names
+            // effects_onDraw and effects_eachTurn are arrays of effect names
             return `
                 <div class="card-edit-block">
                     <h4>Card ${idx + 1}</h4>
@@ -53,10 +53,10 @@
                     <label>Attack: <input type="number" name="attack" value="${card.attack}" required></label><br>
                     <label>Life: <input type="number" name="life" value="${card.life}" required></label><br>
                     <label>Effect Start (hold Ctrl to select multiple):<br>
-                        ${effectSelect("effect_start", card.effect_start, idx)}
+                        ${effectSelect("effects_onDraw", card.effects_onDraw, idx)}
                     </label><br>
                     <label>Effect Loop (hold Ctrl to select multiple):<br>
-                        ${effectSelect("effect_loop", card.effect_loop, idx)}
+                        ${effectSelect("effects_eachTurn", card.effects_eachTurn, idx)}
                     </label><br>
                     <hr>
                 </div>
@@ -83,13 +83,13 @@
             const cardsJson = cardDivs.map(div => {
                 const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
                 const life = parseInt(div.querySelector('input[name="life"]').value, 10);
-                const effect_start = getSelectedValues(div.querySelector('select[name="effect_start"]'));
-                const effect_loop = getSelectedValues(div.querySelector('select[name="effect_loop"]'));
+                const effects_onDraw = getSelectedValues(div.querySelector('select[name="effects_onDraw"]'));
+                const effects_eachTurn = getSelectedValues(div.querySelector('select[name="effects_eachTurn"]'));
                 return {
                     attack,
                     life,
-                    effect_start,
-                    effect_loop
+                    effects_onDraw,
+                    effects_eachTurn
                 };
             });
             document.getElementById('deckJson').value = JSON.stringify(cardsJson, null, 2);
@@ -155,14 +155,14 @@
             cardDivs.forEach(div => {
                 const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
                 const life = parseInt(div.querySelector('input[name="life"]').value, 10);
-                const effect_start = getSelectedValues(div.querySelector('select[name="effect_start"]'));
-                const effect_loop = getSelectedValues(div.querySelector('select[name="effect_loop"]'));
-                deck.addCard(new Card(attack, life, effect_start, effect_loop));
+                const effects_onDraw = getSelectedValues(div.querySelector('select[name="effects_onDraw"]'));
+                const effects_eachTurn = getSelectedValues(div.querySelector('select[name="effects_eachTurn"]'));
+                deck.addCard(new Card(attack, life, effects_onDraw, effects_eachTurn));
                 cardsJson.push({
                     attack,
                     life,
-                    effect_start,
-                    effect_loop
+                    effects_onDraw,
+                    effects_eachTurn
                 });
             });
 
@@ -202,8 +202,8 @@
             const cardsJson = deck.getCards().map(card => ({
                 attack: card.attack,
                 life: card.life,
-                effect_start: card.effect_start,
-                effect_loop: card.effect_loop
+                effects_onDraw: card.effects_onDraw,
+                effects_eachTurn: card.effects_eachTurn
             }));
             jsonField.value = JSON.stringify(cardsJson, null, 2);
         }
