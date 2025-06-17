@@ -124,7 +124,7 @@
             const deck = deckLibrary.get(deckName);
             // Display editable form for cards
             let html = `<form id="cardsForm">
-                <h3>Edit Cards in this deck:</h3>
+                <h3>Deck power: ${deck.getPower()}</h3>
             `;
             deck.getCards().forEach((card, idx) => {
                 html += cardToForm(card, idx);
