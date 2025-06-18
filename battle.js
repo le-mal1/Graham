@@ -32,6 +32,13 @@ export class Battle {
 
 
     fight() {
+        this.turn = 0;
+        this.losers = [false, false];
+        this.battlefield[0] = [];
+        this.battlefield[1] = [];
+        this.leaderIndexes = [-1, -1];
+        this.energies = [0, 0];
+
         for (let i = 0; i < MAX_TURNS; i++) {
 
             this.fightOneTurn();

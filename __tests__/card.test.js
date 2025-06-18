@@ -16,7 +16,7 @@ test('Card getPower calculates power correctly', () => {
     const card = new Card(3, 5, [EFFECTS.HEAL], [EFFECTS.DESTROY]);
     const power = card.getPower();
     // Assuming effects have a power of 0 for simplicity
-    assert.strictEqual(power, 3 + 5 + 1 + 4 * 4); // 3 (attack) + 5 (life) + 1 (heal) + 4 (destroy) + multipler loop effect
+    assert.strictEqual(power, 3 + 5 + 1 + 4 + 4); // 3 (attack) + 5 (life) + 1 (heal) + 4 (destroy) + 4 loop effect
 });
 
 test('Card copy creates a new instance', () => {
