@@ -48,7 +48,7 @@
             // effects_onDraw and effects_eachTurn are arrays of effect names
             return `
                 <div class="card-edit-block">
-                    <h4>Card ${idx + 1} (Power: ${card.getPower()})</h4>
+                    <h4>Card ${idx + 1} (<span class="cardPower">${card.getPower()}</span>)</h4>
                     <input type="hidden" name="cardIdx" value="${idx}">
                     <label>Attack: <input type="number" name="attack" value="${card.attack}" required></label><br>
                     <label>Life: <input type="number" name="life" value="${card.life}" required></label><br>
@@ -73,6 +73,61 @@
             }
         }
 
+        function updateCardPowersFromForm() {
+            const form = document.getElementById('cardsForm');
+            if (!form) return;
+            const cardDivs = Array.from(form.querySelectorAll('.card-edit-block'));
+            cardDivs.forEach((div, idx) => {
+                const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
+                const life = parseInt(div.querySelector('input[name="life"]').value, 10);
+                const effects_onDraw = getSelectedValues(div.querySelector('select[name="effects_onDraw"]'));
+                const effects_eachTurn = getSelectedValues(div.querySelector('select[name="effects_eachTurn"]'));
+                // Calculate power as in Card.getPower()
+                let power = attack + life;
+                effects_onDraw.forEach(effect => {
+                    const eff = window.effects && window.effects.get ? window.effects.get(effect) : null;
+                    power += eff && eff.power ? eff.power : 0;
+                });
+                effects_eachTurn.forEach(effect => {
+                    const eff = window.effects && window.effects.get ? window.effects.get(effect) : null;
+                    power += eff && eff.power ? eff.power + 4 : 4;
+                });
+                // Update the power display in the card
+                const powerSpan = div.querySelector('.cardPower');
+                if (powerSpan) {
+                    powerSpan.textContent = power;
+                }
+            });
+        }
+
+        function updateDeckPowerFromForm() {
+            const form = document.getElementById('cardsForm');
+            const deckPowerSpan = document.getElementById('deckPower');
+            if (!form) {
+                deckPowerSpan.textContent = '0';
+                return;
+            }
+            const cardDivs = Array.from(form.querySelectorAll('.card-edit-block'));
+            let totalPower = 0;
+            cardDivs.forEach(div => {
+                const attack = parseInt(div.querySelector('input[name="attack"]').value, 10);
+                const life = parseInt(div.querySelector('input[name="life"]').value, 10);
+                const effects_onDraw = getSelectedValues(div.querySelector('select[name="effects_onDraw"]'));
+                const effects_eachTurn = getSelectedValues(div.querySelector('select[name="effects_eachTurn"]'));
+                let power = attack + life;
+                effects_onDraw.forEach(effect => {
+                    const eff = window.effects && window.effects.get ? window.effects.get(effect) : null;
+                    power += eff && eff.power ? eff.power : 0;
+                });
+                effects_eachTurn.forEach(effect => {
+                    const eff = window.effects && window.effects.get ? window.effects.get(effect) : null;
+                    power += eff && eff.power ? eff.power + 4 : 4;
+                });
+                totalPower += power;
+            });
+            deckPowerSpan.textContent = totalPower;
+        }
+
         function updateJsonFieldFromForm() {
             const form = document.getElementById('cardsForm');
             if (!form) {
@@ -93,12 +148,13 @@
                 };
             });
             document.getElementById('deckJson').value = JSON.stringify(cardsJson, null, 2);
+            updateDeckPowerFromForm();
+            updateCardPowersFromForm();
         }
 
         function attachLiveUpdateListeners() {
             const form = document.getElementById('cardsForm');
             if (!form) return;
-            // Listen to input and change events on all relevant fields
             form.querySelectorAll('input, select').forEach(el => {
                 el.addEventListener('input', updateJsonFieldFromForm);
                 el.addEventListener('change', updateJsonFieldFromForm);
@@ -124,12 +180,11 @@
             const deck = deckLibrary.get(deckName);
             // Display editable form for cards
             let html = `<form id="cardsForm">
-                <h3>Deck power: ${deck.getPower()}</h3>
+                <h3>Deck power: <span id="deckPower">${deck.getPower()}</span></h3>
             `;
             deck.getCards().forEach((card, idx) => {
                 html += cardToForm(card, idx);
             });
-            //html += `<button type="submit">Save Changes</button>`;
             html += `</form>`;
             formDiv.innerHTML = html;
 
@@ -139,8 +194,9 @@
             // Attach live update listeners
             attachLiveUpdateListeners();
 
-            // Show JSON
+            // Show JSON and update power
             updateJsonField(deck);
+            updateDeckPowerFromForm();
         }
 
         async function handleSubmit(event) {
@@ -206,6 +262,7 @@
                 effects_eachTurn: card.effects_eachTurn
             }));
             jsonField.value = JSON.stringify(cardsJson, null, 2);
+            updateDeckPowerFromForm();
         }
 
         // Add copy functionality

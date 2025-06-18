@@ -6,5 +6,8 @@ import * as EFFECTS from '../effect.const.js';
 let tmpDeck = new Deck();
 deckLibrary.set("deck2", tmpDeck);
 tmpDeck
-    .addCard(new Card(2, 3, [EFFECTS.EMPTY], [EFFECTS.EMPTY]))
-    .addCard(new Card(1, 3, [EFFECTS.EMPTY], [EFFECTS.EMPTY]));
+    .addCard(new Card(0, 2, [EFFECTS.CALL_SUPPORT], [EFFECTS.INCREASE_ENERGY]))
+    .addCard(new Card(0, 2, [EFFECTS.CALL_SUPPORT], [EFFECTS.INCREASE_ENERGY]))
+    .addCard(new Card(0, 2, [EFFECTS.CALL_SUPPORT], [EFFECTS.INCREASE_ENERGY]))
+    .addCard(new Card(0, 2, [EFFECTS.CALL_SUPPORT], [EFFECTS.INCREASE_ENERGY]))
+    .addCard(new Card(0, 3, [EFFECTS.EMPTY], [EFFECTS.DESTROY]));
