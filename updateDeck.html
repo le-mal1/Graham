@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Deck Cards</title>
+
+    <script type="module" src="preambule.js"></script>
+    <script type="module" src="decks/deck1.js"></script>
+    <script type="module" src="decks/deck2.js"></script>
+    <script type="module" src="decks/deck3.js"></script>
+
     <script type="module">
         import { deckLibrary } from './preambule.js';
         import { Card } from './card.js';
         import * as EFFECTS_CONST from './effect.const.js';
 
-        // List of deck files and names (update as needed to match files in decks/)
-        const deckFiles = [
-            { file: 'deck1.js', name: 'deck1' },
-            { file: 'deck2.js', name: 'deck2' }
-        ];
         const EFFECTS = EFFECTS_CONST.EFFECTS;
 
         function getQueryParam(param) {
@@ -24,10 +25,8 @@
         function displayDeckList() {
             const deckListDiv = document.getElementById('deckList');
             let html = "<b>Available decks:</b> ";
-            deckFiles.forEach(deck => {
-                if (deckLibrary.has(deck.name)) {
-                    html += `<a href="?deck=${encodeURIComponent(deck.name)}">${deck.name}</a> `;
-                }
+            deckLibrary.keys().forEach(deck => {
+                html += `<a href="?deck=${encodeURIComponent(deck)}">${deck}</a> `;
             });
             deckListDiv.innerHTML = html;
         }
@@ -61,16 +60,6 @@
                     <hr>
                 </div>
             `;
-        }
-
-        async function importDeckFiles() {
-            for (const deck of deckFiles) {
-                try {
-                    await import(`./decks/${deck.file}`);
-                } catch (e) {
-                    // Ignore if file not found or import fails
-                }
-            }
         }
 
         function updateCardPowersFromForm() {
@@ -162,7 +151,7 @@
         }
 
         async function loadDeck() {
-            await importDeckFiles(); // Ensure decks are loaded before using deckLibrary
+            //await importDeckFiles(); // Ensure decks are loaded before using deckLibrary
             displayDeckList();
             const deckName = getQueryParam('deck');
             document.getElementById('deckFileName').textContent = deckName ? deckName : '(none)';
@@ -178,6 +167,7 @@
                 return;
             }
             const deck = deckLibrary.get(deckName);
+            console.log("Loaded deck:", deckName, deck);
             // Display editable form for cards
             let html = `<form id="cardsForm">
                 <h3>Deck power: <span id="deckPower">${deck.getPower()}</span></h3>

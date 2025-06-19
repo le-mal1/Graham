@@ -1,6 +1,5 @@
 "use strict";
 
-//import { IngameCard } from './ingameCard.js';
 import * as EFFECTS from './effect.const.js';
 
 export let effects = new Map();

@@ -5,4 +5,8 @@ import * as EFFECTS from '../effect.const.js';
 
 let tmpDeck = new Deck();
 deckLibrary.set("deck1", tmpDeck);
-tmpDeck.addCard(new Card(5, 5, [EFFECTS.HEAL], []));
+tmpDeck.addCard(new Card(1, 1, [EFFECTS.HEAL], []));
+
+tmpDeck = new Deck();
+deckLibrary.set("deck11", tmpDeck);
+tmpDeck.addCard(new Card(2, 2, [EFFECTS.HEAL], []));
