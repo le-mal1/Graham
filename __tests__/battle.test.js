@@ -249,3 +249,55 @@ test('Battle applies effect CALL_LEADER correctly at Loop', () => {
     assert.strictEqual(battle.leaders[0].life, 6); // 7 - 1 from damage
     assert.strictEqual(battle.turn, 3);
 });
+
+test('Battle applies effect INCREASE_ENERGY correctly at Start', () => {
+    const deck1 = new Deck();
+    const deck2 = new Deck();
+    // Add cards with effects
+    deck1.addCard(new Card(4, 4, [EFFECTS.INCREASE_ENERGY], []));
+    deck2.addCard(new Card(5, 5, [], []));
+
+    const battle = new Battle(deck1, deck2);
+
+    battle.fight();
+
+    assert.strictEqual(battle.battlefield[0].length, 1);
+    assert.strictEqual(battle.energies[0], 1);
+    assert.strictEqual(battle.energies[1], 0);
+});
+
+test('Battle applies effect INCREASE_ENERGY correctly at Loop', () => {
+    const deck1 = new Deck();
+    const deck2 = new Deck();
+    // Add cards with effects
+    deck1.addCard(new Card(4, 4, [], [EFFECTS.INCREASE_ENERGY]));
+    deck2.addCard(new Card(0, 1, [], []));
+    deck2.addCard(new Card(0, 1, [], []));
+    deck2.addCard(new Card(0, 1, [], []));
+
+    const battle = new Battle(deck1, deck2);
+
+    battle.fight();
+
+    assert.strictEqual(battle.battlefield[0].length, 1);
+    assert.strictEqual(battle.energies[0], 3);
+    assert.strictEqual(battle.energies[1], 0);
+});
+
+test('Battle applies effect DESTROY correctly at Start', () => {
+    const deck1 = new Deck();
+    const deck2 = new Deck();
+    // Add cards with effects
+    deck1.addCard(new Card(0, 2, [EFFECTS.INCREASE_ENERGY], []));
+    deck1.addCard(new Card(0, 2, [EFFECTS.INCREASE_ENERGY], []));
+    deck1.addCard(new Card(0, 2, [EFFECTS.DESTROY], []));
+    deck2.addCard(new Card(5, 5, [], []));
+
+    const battle = new Battle(deck1, deck2);
+
+    battle.fight();
+
+    assert.strictEqual(battle.battlefield[0].length, 3);
+    assert.strictEqual(battle.energies[0], 1);
+    assert.strictEqual(battle.energies[1], 0);
+});
