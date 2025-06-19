@@ -3,8 +3,9 @@ import { Deck } from '../deck.js';
 import { deckLibrary } from '../preambule.js';
 import * as EFFECTS from '../effect.const.js';
 
-let tmpDeck = new Deck();
-deckLibrary.set("deck3", tmpDeck);
+let tmpDeck;
+tmpDeck = new Deck();
+deckLibrary.set("Deck3", tmpDeck);
 
 const jsonDeck =
     [

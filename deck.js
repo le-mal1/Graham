@@ -57,6 +57,17 @@ export class Deck {
 
     }
 
+    getMaxCardPower() {
+        let maxPower = 0;
+        this.cards.forEach(card => {
+            const cardPower = card.getPower();
+            if (cardPower > maxPower) {
+                maxPower = cardPower;
+            }
+        });
+        return maxPower;
+    }
+
     getSize() {
         return this.cards.length;
     }

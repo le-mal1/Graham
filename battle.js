@@ -187,7 +187,7 @@ export class Battle {
         //Effects loop
         for (let b = 0; b < this.battlefield.length; b++) {
             this.battlefield[b].forEach((card) => {
-                if (card.life <= 0) return; // Skip dead cards
+                if (card.life <= 0 && card.age > 0) return; // Skip dead cards
 
                 card.effects_eachTurn.forEach(effect => {
                     effects.get(effect).effect(card, this, b);

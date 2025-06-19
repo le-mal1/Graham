@@ -17,8 +17,8 @@
             const deckListDiv = document.getElementById('deckFiles');
 
             let html = '<ul>';
-            for (const deck of deckLibrary.keys()) {
-                html += `<li><a href="updateDeck.html?deck=${encodeURIComponent(deck)}"><b>${deck}</b></a></li>`;
+            for (const deckName of deckLibrary.keys()) {
+                html += `<li><a href="updateDeck.html?deck=${encodeURIComponent(deckName)}"><b>${deckName}</b></a>: Deck Power: ${deckLibrary.get(deckName).getPower()} - Max Card Power: ${deckLibrary.get(deckName).getMaxCardPower()}</li>`;
             }
             html += '</ul>';
             deckListDiv.innerHTML = html;
