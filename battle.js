@@ -274,4 +274,14 @@ export class Battle {
     subscribe(l) {
         this.listeners.push(l);
     }
+
+    copy() {
+        let newBattle = new Battle(this.battleDecks[0].copy(), this.battleDecks[1].copy());
+        newBattle.battlefield = this.battlefield.map(bf => bf.map(card => card.copy()));
+        newBattle.leaderIndexes = [...this.leaderIndexes];
+        newBattle.energies = [...this.energies];
+        newBattle.losers = [...this.losers];
+        newBattle.turn = this.turn;
+        return newBattle;
+    }
 }

@@ -15,6 +15,8 @@ import { EFFECTS } from './effect.const.js';
 var deckFighter1;
 var deckFighter2;
 var battle;
+var battleHistory = [];
+var animTurn = 0;
 
 
 main();
@@ -27,6 +29,7 @@ function main() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('deck1')) nameDeck1 = urlParams.get('deck1');
     if (urlParams.has('deck2')) nameDeck2 = urlParams.get('deck2');
+    if (urlParams.has('animTurn')) animTurn = parseInt(urlParams.get('animTurn'));
 
     //console.log("deck1: " + nameDeck1 + ", deck2: " + nameDeck2);
 
@@ -53,10 +56,26 @@ function main() {
     html += DisplayMng.displayDecks(deckFighter1, deckFighter2);
     document.getElementById("decks").innerHTML = html;
 
+    document.getElementById('prevAnimTurn').onclick = function () {
+        if (animTurn > 0) {
+            animTurn--;
+            document.getElementById("battle").innerHTML = ""; // Clear previous
+            displayBattleHistory(animTurn);
+        }
+    };
+
+    document.getElementById('nextAnimTurn').onclick = function () {
+        animTurn++;
+        document.getElementById("battle").innerHTML = ""; // Clear previous
+        displayBattleHistory(animTurn);
+    };
+
     battle = new Battle(deckFighter1, deckFighter2);
 
     battle.subscribe(beNotified);
     battle.fight();
+
+    displayBattleHistory(animTurn);
 
     //html = "";
     //for (let i = 0; i < 3; i++) {
@@ -104,11 +123,17 @@ function test100Decks() {
 function beNotified(_evt, _battle) {
     if (_evt == EVT_TURN_END ||
         _evt == EVT_FIGHT_START) {
-        let html = document.getElementById("battle").innerHTML;
-        html += DisplayMng.displayBattle(battle, "BATTLE " + _battle.turn + " " + _evt);
-        document.getElementById("battle").innerHTML = html;
-        //console.log("bn");
+        battleHistory.push(_battle.copy());
     }
+}
 
+function displayBattleHistory(_animTurn) {
+    _animTurn = Math.max(0, Math.min(_animTurn, battleHistory.length - 1)); // Clamp the value between 0 and the last index
+
+    let battle = battleHistory[_animTurn];
+    let html = document.getElementById("battle").innerHTML;
+    html += DisplayMng.displayBattle(battle, `BATTLE ${battle.turn}`);
+    document.getElementById("battle").innerHTML = html;
+    //console.log("bn");
 }
 
